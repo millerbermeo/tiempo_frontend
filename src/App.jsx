@@ -9,11 +9,11 @@ import { Navbar } from './components/Navbar';
 
 // Lazy load the pages
 const HomePage = lazy(() => import('./pages/HomePage'));
-const ResiduosPage = lazy(() => import('./pages/ResiduosPage'));
+const EventosPage = lazy(() => import('./pages/EventosPage'));
 const MovimientosPage = lazy(() => import('./pages/MovimientosPage'));
-const ActividadesPage = lazy(() => import('./pages/ActividadesPage'));
+const CompeticionesPage = lazy(() => import('./pages/CompeticionesPage'));
+const CategoriaPage = lazy(() => import('./pages/CategoriaPage'));
 const UsuariosPage = lazy(() => import('./pages/UsuariosPage'));
-const ElementosPage = lazy(() => import('./pages/ElementosPage'));
 
 export const App = () => {
   return (
@@ -29,11 +29,11 @@ export const App = () => {
             </WithSidebar>
           </ProtectedRoute>
         } />
-        <Route path="/residuos" element={
+        <Route path="/eventos" element={
           <ProtectedRoute>
             <WithSidebar>
               <Suspense fallback={<div>Loading...</div>}>
-                <ResiduosPage />
+                <EventosPage />
               </Suspense>
             </WithSidebar>
           </ProtectedRoute>
@@ -47,11 +47,20 @@ export const App = () => {
             </WithSidebar>
           </ProtectedRoute>
         } />
-        <Route path="/actividades" element={
+        <Route path="/competiciones" element={
           <ProtectedRoute>
             <WithSidebar>
               <Suspense fallback={<div>Loading...</div>}>
-                <ActividadesPage />
+                <CompeticionesPage />
+              </Suspense>
+            </WithSidebar>
+          </ProtectedRoute>
+        } />
+        <Route path="/categorias" element={
+          <ProtectedRoute>
+            <WithSidebar>
+              <Suspense fallback={<div>Loading...</div>}>
+                <CategoriaPage />
               </Suspense>
             </WithSidebar>
           </ProtectedRoute>
@@ -65,15 +74,6 @@ export const App = () => {
             </WithSidebar>
           </ProtectedRoute>
         } />
-        <Route path="/elementos" element={
-          <ProtectedRoute>
-            <WithSidebar>
-              <Suspense fallback={<div>Loading...</div>}>
-                <ElementosPage />
-              </Suspense>
-            </WithSidebar>
-          </ProtectedRoute>
-        } />
       </Routes>
     </BrowserRouter>
   );
@@ -83,11 +83,11 @@ const WithSidebar = ({ children }) => (
   <div className="flex">
     <Sidebar>
       <SidebarItem nav="/home" icon={<Home size={20} />} text="Home" />
-      <SidebarItem nav="/residuos" icon={<Trash2 size={20} />} text="Residuos"/>
+      <SidebarItem nav="/eventos" icon={<Trash2 size={20} />} text="Eventos"/>
       <SidebarItem nav="/movimientos" icon={<ArrowLeftRight size={20} />} text="Movimientos" />
-      <SidebarItem nav="/actividades" icon={<Calendar size={20} />} text="Actividades"/>
-      <SidebarItem nav="/usuarios" icon={<CircleUserRound size={20} />} text="Usuarios" />
-      <SidebarItem nav="/elementos" icon={<Settings size={20} />} text="Elementos"/>
+      <SidebarItem nav="/competiciones" icon={<Calendar size={20} />} text="Competiciones"/>
+      <SidebarItem nav="/categorias" icon={<Settings size={20} />} text="Categorias" />
+      <SidebarItem nav="/usuarios" icon={<CircleUserRound size={20} />} text="Usuarios"/>
     </Sidebar>
 
     <div className='w-full h-screen overflow-y-auto'>
