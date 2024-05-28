@@ -50,7 +50,8 @@ export const RegistrarParteEvento = ({ fetchData }) => {
         });
     };
 
-    const handleSelectChange = (name, value) => {
+    const handleSelectChange = (event) => {
+        const { name, value } = event.target;
         setFormData({
             ...formData,
             [name]: value
@@ -133,9 +134,10 @@ export const RegistrarParteEvento = ({ fetchData }) => {
                             </ModalHeader>
                             <ModalBody>
                                 <select
+                                    name="fk_evento"
                                     label="Evento"
                                     placeholder="Selecciona un evento"
-                                    onChange={(e) => handleSelectChange('fk_evento', e.target.value)}
+                                    onChange={handleSelectChange}
                                     value={formData.fk_evento}
                                     className="border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300"
                                 >

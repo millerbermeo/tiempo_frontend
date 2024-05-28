@@ -63,7 +63,8 @@ export const RegistrarEvento = ({ fetchData }) => {
         });
     };
 
-    const handleSelectChange = (name, value) => {
+    const handleSelectChange = (event) => {
+        const { name, value } = event.target;
         setFormData({
             ...formData,
             [name]: value
@@ -91,43 +92,25 @@ export const RegistrarEvento = ({ fetchData }) => {
             return;
         }
 
-        const selectedCategoria = categorias.find(cat => cat.id === parseInt(formData.fk_categoria));
-        const selectedTipoEvento = tiposEvento.find(tipo => tipo.id === parseInt(formData.fk_tipoEvento));
-
-        if (!selectedCategoria || !selectedTipoEvento) {
-            alert('Seleccione una categoría y tipo de evento válidos');
-            return;
-        }
-
         try {
-
-            console.log(selectedCategoria.nombre)
-            console.log(selectedCategoria.id)
-
             await axiosClient.post('evento/', {
                 nombre: formData.nombre,
-                fk_categoria: {
-                    nombre: selectedCategoria.nombre,
-                    fk_competencia: selectedCategoria.fk_competencia
-                },
-                fk_tipoEvento: {
-                    tipo: selectedTipoEvento.tipo
-                },
+                fk_categoria: formData.fk_categoria,
+                fk_tipoEvento: formData.fk_tipoEvento,
                 cantidadPartes: formData.cantidadPartes,
                 date_start: formData.date_start
-            }).then((response) => {
-                setIsSuccess(true);
-                fetchData();
-                onOpenChange(false);
-                setFormData({
-                    nombre: "",
-                    fk_categoria: "",
-                    fk_tipoEvento: "",
-                    cantidadPartes: "",
-                    date_start: ""
-                });
-                setMessage('Evento Registrado Con Éxito');
             });
+            setIsSuccess(true);
+            fetchData();
+            onOpenChange(false);
+            setFormData({
+                nombre: "",
+                fk_categoria: "",
+                fk_tipoEvento: "",
+                cantidadPartes: "",
+                date_start: ""
+            });
+            setMessage('Evento Registrado Con Éxito');
         } catch (error) {
             console.error('Error al enviar los datos:', error);
             setIsSuccess(false);
@@ -167,9 +150,10 @@ export const RegistrarEvento = ({ fetchData }) => {
                                 )}
 
                                 <select
+                                    name="fk_categoria"
                                     label="Categoría"
                                     placeholder="Selecciona una categoría"
-                                    onChange={(e) => handleSelectChange('fk_categoria', e.target.value)}
+                                    onChange={handleSelectChange}
                                     value={formData.fk_categoria}
                                     className="border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300"
                                 >
@@ -187,9 +171,10 @@ export const RegistrarEvento = ({ fetchData }) => {
                                 )}
 
                                 <select
+                                    name="fk_tipoEvento"
                                     label="Tipo de Evento"
                                     placeholder="Selecciona un tipo de evento"
-                                    onChange={(e) => handleSelectChange('fk_tipoEvento', e.target.value)}
+                                    onChange={handleSelectChange}
                                     value={formData.fk_tipoEvento}
                                     className="border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300"
                                 >
@@ -251,4 +236,4 @@ export const RegistrarEvento = ({ fetchData }) => {
             <SweetAlert type={isSuccess ? 'success' : 'error'} message={message}/>
         </div>
     );
-}
+};

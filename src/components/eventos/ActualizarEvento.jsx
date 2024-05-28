@@ -21,8 +21,8 @@ export const ActualizarEvento = ({ fetchData, evento }) => {
 
     const [formData, setFormData] = useState({
         nombre: evento.nombre,
-        fk_categoria: evento.fk_categoria.nombre,
-        fk_tipoEvento: evento.fk_tipoEvento.tipo,
+        fk_categoria: evento.fk_categoria,
+        fk_tipoEvento: evento.fk_tipoEvento,
         cantidadPartes: evento.cantidadPartes,
         date_start: evento.date_start
     });
@@ -62,7 +62,8 @@ export const ActualizarEvento = ({ fetchData, evento }) => {
         });
     };
 
-    const handleSelectChange = (name, value) => {
+    const handleSelectChange = (event) => {
+        const { name, value } = event.target;
         setFormData({
             ...formData,
             [name]: value
@@ -90,27 +91,18 @@ export const ActualizarEvento = ({ fetchData, evento }) => {
             return;
         }
 
-        const selectedCategoria = categorias.find(cat => cat.nombre === formData.fk_categoria);
-        const selectedTipoEvento = tiposEvento.find(tipo => tipo.tipo === formData.fk_tipoEvento);
-
         try {
             await axiosClient.put(`evento/${evento.id}/`, {
                 nombre: formData.nombre,
-                fk_categoria: {
-                    nombre: selectedCategoria.nombre,
-                    fk_competencia: selectedCategoria.fk_competencia
-                },
-                fk_tipoEvento: {
-                    tipo: selectedTipoEvento.tipo
-                },
+                fk_categoria: formData.fk_categoria,
+                fk_tipoEvento: formData.fk_tipoEvento,
                 cantidadPartes: formData.cantidadPartes,
                 date_start: formData.date_start
-            }).then((response) => {
-                setIsSuccess(true);
-                fetchData();
-                onOpenChange(false);
-                setMessage('Evento Actualizado Con Éxito');
             });
+            setIsSuccess(true);
+            fetchData();
+            onOpenChange(false);
+            setMessage('Evento Actualizado Con Éxito');
         } catch (error) {
             console.error('Error al enviar los datos:', error);
             setIsSuccess(false);
@@ -144,15 +136,16 @@ export const ActualizarEvento = ({ fetchData, evento }) => {
                                     </div>
                                 )}
                                 <select
+                                    name="fk_categoria"
                                     label="Categoría"
                                     placeholder="Selecciona una categoría"
-                                    onChange={(e) => handleSelectChange('fk_categoria', e.target.value)}
+                                    onChange={handleSelectChange}
                                     value={formData.fk_categoria}
                                     className="border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300"
                                 >
                                     <option value="">Selecciona una categoría</option>
                                     {categorias.map((cat) => (
-                                        <option key={cat.id} value={cat.nombre}>
+                                        <option key={cat.id} value={cat.id}>
                                             {cat.nombre}
                                         </option>
                                     ))}
@@ -163,15 +156,16 @@ export const ActualizarEvento = ({ fetchData, evento }) => {
                                     </div>
                                 )}
                                 <select
+                                    name="fk_tipoEvento"
                                     label="Tipo de Evento"
                                     placeholder="Selecciona un tipo de evento"
-                                    onChange={(e) => handleSelectChange('fk_tipoEvento', e.target.value)}
+                                    onChange={handleSelectChange}
                                     value={formData.fk_tipoEvento}
                                     className="border rounded-md p-2 focus:outline-none focus:ring focus:border-blue-300"
                                 >
                                     <option value="">Selecciona un tipo de evento</option>
                                     {tiposEvento.map((tipo) => (
-                                        <option key={tipo.id} value={tipo.tipo}>
+                                        <option key={tipo.id} value={tipo.id}>
                                             {tipo.tipo}
                                         </option>
                                     ))}

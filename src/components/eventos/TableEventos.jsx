@@ -7,6 +7,8 @@ import { ActualizarEvento } from './ActualizarEvento';
 
 export const TableEventos = () => {
     const [data, setData] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [eventTypes, setEventTypes] = useState([]);
     const [selectedKeys, setSelectedKeys] = useState(new Set([]));
     const [rowsPerPage, setRowsPerPage] = useState(6);
     const [page, setPage] = useState(1);
@@ -21,8 +23,28 @@ export const TableEventos = () => {
         }
     };
 
+    const fetchCategories = async () => {
+        try {
+            const response = await axiosClient.get('categoria/');
+            setCategories(response.data);
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
+
+    const fetchEventTypes = async () => {
+        try {
+            const response = await axiosClient.get('tipoEvento/');
+            setEventTypes(response.data);
+        } catch (error) {
+            console.error('Error fetching event types:', error);
+        }
+    };
+
     useEffect(() => {
         fetchData();
+        fetchCategories();
+        fetchEventTypes();
     }, []);
 
     const onSearchChange = (value) => {
@@ -57,15 +79,24 @@ export const TableEventos = () => {
         }
     };
 
+    const getCategoryName = (categoryId) => {
+        const category = categories.find(cat => cat.id === categoryId);
+        return category ? category.nombre : 'Unknown';
+    };
+
+    const getEventTypeName = (eventTypeId) => {
+        const eventType = eventTypes.find(type => type.id === eventTypeId);
+        return eventType ? eventType.tipo : 'Unknown';
+    };
+
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
-    const paginatedData = data.filter(item => item.nombre.toLowerCase().includes(filterValue.toLowerCase())).slice(start, end);
-
+    const paginatedData = data.filter(item => item?.nombre?.toLowerCase().includes(filterValue.toLowerCase())).slice(start, end);
 
     const downloadCSV = (data) => {
         const headers = ["ID", "Nombre", "Categoría", "Competencia", "Tipo de Evento", "Participantes", "Fecha de Inicio"];
         const rows = data.map(item =>
-            [item.id, item.nombre, item.fk_categoria.nombre, item.fk_categoria.fk_competencia.nombre, item.fk_tipoEvento.tipo, item.cantidadPartes, item.date_start].join(',')
+            [item.id, item.nombre, getCategoryName(item.fk_categoria), "Competencia", getEventTypeName(item.fk_tipoEvento), item.cantidadPartes, item.date_start].join(',')
         );
         const csvString = [headers.join(','), ...rows].join('\n');
         const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
@@ -78,7 +109,7 @@ export const TableEventos = () => {
         link.click();
         document.body.removeChild(link);
     };
-    
+
     const printTable = () => {
         const printContents = document.querySelector('.printableTable').outerHTML;
         const originalContents = document.body.innerHTML;
@@ -87,7 +118,6 @@ export const TableEventos = () => {
         document.body.innerHTML = originalContents;
         window.location.reload(); // Esto es opcional para restaurar completamente el estado de la página.
     };
-    
 
     return (
         <>
@@ -147,9 +177,9 @@ export const TableEventos = () => {
                         <TableRow key={item.id}>
                             <TableCell>{item.id}</TableCell>
                             <TableCell>{item.nombre}</TableCell>
-                            <TableCell>{item.fk_categoria.nombre}</TableCell>
-                            <TableCell>{item.fk_categoria.fk_competencia.nombre}</TableCell>
-                            <TableCell>{item.fk_tipoEvento.tipo}</TableCell>
+                            <TableCell>{getCategoryName(item.fk_categoria)}</TableCell>
+                            <TableCell>{"Competencia"}</TableCell>
+                            <TableCell>{getEventTypeName(item.fk_tipoEvento)}</TableCell>
                             <TableCell>{item.cantidadPartes}</TableCell>
                             <TableCell>{item.date_start}</TableCell>
                             <TableCell className='flex justify-center gap-2'>
@@ -182,4 +212,3 @@ export const TableEventos = () => {
         </>
     );
 };
-

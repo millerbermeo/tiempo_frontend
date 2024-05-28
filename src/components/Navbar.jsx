@@ -5,7 +5,7 @@ import { Dropdown, Link, DropdownTrigger, DropdownMenu, DropdownItem, Button } f
 export const Navbar = ({ tittle = "miller" }) => {
     return (
         <>
-            <nav className="sticky hidden top-0 z-20 lg:flex w-full flex-wrap items-center justify-between border-b bg-zinc-900 lg:py-2 shadow-md">
+            <nav className="sticky hidden top-0 z-20 lg:flex w-full flex-wrap items-center justify-between border-b bg-gray-800 lg:py-2 shadow-md">
                 <div className="flex w-full flex-wrap items-center justify-between px-3">
                     <div>
                         <img className='w-16 h-16 rounded-full' src="logo.webp" alt="Logo" />

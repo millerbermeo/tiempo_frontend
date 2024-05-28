@@ -29,7 +29,7 @@ export const ModalLogout = () => {
 
 
 
-                <button color="" className='flex justify-start -mt-[2px] pl-0 items-center gap-x-4 text-white text-opacity-80 2xl:text-lg' onClick={onOpen}>
+                <button color="" className='flex justify-start -mt-[2px] pl-0 items-center gap-x-4 text-black text-opacity-80 2xl:text-lg' onClick={onOpen}>
                     Logout
                 </button>
 
